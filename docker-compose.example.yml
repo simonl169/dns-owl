@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+    dns-owl:
+        image: dns-owl:v0.1.7
+        environment:
+            - STRATO_DYNDNS_PASSWORD=yourpw
+            - TZ=Europe/Berlin
+            - CRONVARS2=*/1 * * * *
+        volumes:
+            - ./config.json:/app/config.json
+            

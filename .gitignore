@@ -1,0 +1,5 @@
+config.json
+docker-compose.yml
+environment
+__pycache__
+.idea

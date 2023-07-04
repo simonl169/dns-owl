@@ -1,0 +1,8 @@
+environment
+__pycache__
+.idea
+.gitignore
+.git
+config.json
+docker-compose.yml
+docker-compose.example.yml
