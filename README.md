@@ -1,3 +1,10 @@
+![GitHub release (with filter)](https://img.shields.io/github/v/release/simonl169/dns-owl) ![GitHub all releases](https://img.shields.io/github/downloads/simonl169/dns-owl/total)
+![Static Badge](https://img.shields.io/badge/Python-3.11-blue)
+
+
+
+
+
 # dns-owl
 This is a little Python script that updates your IP to the DynDNS servers of Strato
 
