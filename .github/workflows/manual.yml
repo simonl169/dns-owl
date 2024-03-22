@@ -32,7 +32,7 @@ jobs:
          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
          tags: |
            type=raw,value=foo
-                   flavor: |
+         flavor: |
            latest=false
            prefix=
            suffix=beta
