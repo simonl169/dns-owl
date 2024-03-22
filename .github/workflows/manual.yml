@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create Docker Image Beta for testing
 
 on:
   workflow_dispatch:
