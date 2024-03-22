@@ -1,4 +1,4 @@
-environment
+venv
 __pycache__
 .idea
 .gitignore

@@ -1,9 +1,8 @@
 version: '3.8'
 services:
     dns-owl:
-        image: ghcr.io/simonl169/dns-owl:v0.1.8
+        image: ghcr.io/simonl169/dns-owl:v0.2
         environment:
-            - STRATO_DYNDNS_PASSWORD=yourpw
             - TZ=Europe/Berlin
             - CRONVARS2=*/1 * * * *
         volumes:

@@ -1,7 +1,17 @@
 {
+
+  "ZONE_ID": "your_zone_id",
+  "USER_EMAIL": "name.lastname@mail.com",
+  "API_KEY": "your_CF_API_key",
   "domains": [
-    "domain1.example.com",
-    "domain2.example.com",
-    "domain3.example.com"
+     {
+       "RECORD_ID": "record_key_1",
+       "RECORD_NAME": "sub1.domain.com"
+     },
+     {
+       "RECORD_ID": "record_key_2",
+       "RECORD_NAME": "sub2.domain.com"
+     }
   ]
+
 }
