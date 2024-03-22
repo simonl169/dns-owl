@@ -1,21 +1,31 @@
 import requests
 import pydig
-
-def get_current_public_ip():
-    ip = requests.get('https://ident.me')
-    print('My public IP address is: {}'.format(ip.text))
-    return ip.text
+import json
 
 
-def resolve_current_server_ip(url):
-    resolver = pydig.Resolver(nameservers=['8.8.8.8'])
+def load_config(filename: str):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    return data
+
+
+def get_current_public_ip() -> str:
+    ip_address = requests.get('https://ident.me')
+    print(f'\tMy public IP address is: {ip_address.text}')
+    return ip_address.text
+
+
+def resolve_current_server_ip(url, nameservers='8.8.8.8') -> [str, str]:
+    nameservers = [nameservers]
+    resolver = pydig.Resolver(nameservers=nameservers)
     local_ip = pydig.query(url, 'A')
     public_ip = resolver.query(url, 'A')
     print(f'\tLocal IP address for {url} is: {local_ip[0]}')
     print(f'\tPublic IP address for {url} is: {public_ip[0]}')
     return local_ip[0], public_ip[0]
 
-def compare_ip(ip1, ip2):
+
+def compare_ip(ip1, ip2) -> bool:
     print('\tComparing addresses:')
     print(f'\tIP address 1: {ip1}')
     print(f'\tIP address 2: {ip2}')
@@ -24,32 +34,92 @@ def compare_ip(ip1, ip2):
     else:
         return False
 
-def update_dns_ip(url, password):
 
-    update_url = 'https://dyndns.strato.com/nic/update?hostname=' + url + '&thisipv4=1'
-    #print(update_url)
-    r = requests.get(update_url, auth=(url, password))
-    #print(r.status_code)
-    #print(r.headers)
-    #print(r.text)
-    if 'nochg' in r.text:
-        print('\tNo update needed!')
-        print(f'\tFeedback from Strato: {r.text}')
-    elif 'good' in r.text:
-        print('\tSuccess!')
-        print(f'\tFeedback from Strato: {r.text}')
-    elif 'badauth' in r.text:
-        print('\tBadauth!')
-        print('\tYou provided a wrong password or the subdomain does not exist')
-    elif 'abuse' in r.text:
-        print('\tAbuse! You probaby update too often')
-        print(f'\tFeedback from Strato: {r.text}')
-    else:
-        print('\tSome other error')
-        print(f'\tFeedback from Strato: {r.text}')
+def set_ip(cloudflare, domain, current_ip: str):
+    """
+    sets the ip in via cloudflare api
+    """
+    zone_id = cloudflare['ZONE_ID']
+    api_key = cloudflare['API_KEY']
+    user_email = cloudflare['USER_EMAIL']
 
+    record_id = domain['RECORD_ID']
+    record_name = domain['RECORD_NAME']
+
+    print(f"\tCloudflare Zone ID is: {zone_id}")
+    print(f"\tCloudflare API Key is: {api_key}")
+    print(f"\tRecord ID is: {record_id}")
+    print(f"\tRecord Name is: {record_name}")
+
+    url = (
+            "https://api.cloudflare.com/client/v4/zones/%(zone_id)s/dns_records/%(record_id)s"
+            % {"zone_id": zone_id, "record_id": record_id}
+    )
+
+    headers = {
+        "X-Auth-Email": user_email,
+        "X-Auth-Key": api_key,
+        "Content-Type": "application/json",
+    }
+
+    payload = {"type": "A", "name": record_name, "content": current_ip}
+    response = requests.put(url, headers=headers, data=json.dumps(payload))
+    # print(response.status_code)
+    # print(response.json()['success'])
+
+    return response
+
+
+def print_owl():
+    print(r"""
+      #    _____   _   _   _____    ____ __          __ _                ___     ___  
+      #   |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \   |__ \ 
+      #   | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | |     ) |
+      #   | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | |    / / 
+      #   | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  / /_ 
+      #   |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_)|____|
+
+
+    __________-------____                 ____-------__________
+          \------____-------___--__---------__--___-------____------/
+           \//////// / / / / / \   _-------_   / \ \ \ \ \ \\\\\\\\/
+             \////-/-/------/_/_| /___   ___\ |_\_\------\-\-\\\\/
+               --//// / /  /  //|| (O)\ /(O) ||\\  \  \ \ \\\\--
+                    ---__/  // /| \_  /V\  _/ |\ \\  \__---
+                         -//  / /\_ ------- _/\ \  \\-
+                           \_/_/ /\---------/\ \_\_/
+                               ----\   |   /----
+                                    | -|- |
+                                   /   |   \
+                                   ---- \___|
+
+      # by Simon169    
+    """)
+
+
+def update_all_ip(current_ip):
+    data = load_config('config.json')
+
+    cf = data
+
+    for domain in data['domains']:
+        print(f"{'':#<40}")
+        print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
+        response = set_ip(cf, domain, current_ip)
+
+        if response.json()['success']:
+            print(f"\tIP was set successfully!")
+        else:
+            print(f"\tThere was an error, see below for more details")
+            print(f"\tResponse code was: {response.status_code}")
+
+    print('\tDone!')
+    print(f"{'':#<40}")
 
 
 if __name__ == '__main__':
+    print_owl()
+    print(f"{'':#<40}")
+    ip = get_current_public_ip()
 
-    print('Test')
+    update_all_ip(ip)
