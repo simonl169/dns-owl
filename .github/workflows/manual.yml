@@ -31,11 +31,11 @@ jobs:
        with:
          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
          tags: |
-           type=raw,value=foo
+           type=raw,value=beta
          flavor: |
            latest=false
            prefix=
-           suffix=beta
+           suffix=
 
      - name: Build and push Docker image
        uses: docker/build-push-action@v5
