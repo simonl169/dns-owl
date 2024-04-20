@@ -1,12 +1,15 @@
 import requests
 import pydig
 import json
+from notifications import Notifier
+from owl import print_owl
+from config import load_config
 
 
-def load_config(filename: str):
-    with open(filename, 'r') as f:
-        data = json.load(f)
-    return data
+if load_config('config.json')['ENABLE_NOTIFICATIONS']:
+    notification_service = Notifier()
+else:
+    notification_service = None
 
 
 def get_current_public_ip() -> str:
@@ -70,33 +73,6 @@ def set_ip(cloudflare, domain, current_ip: str):
     return response
 
 
-def print_owl():
-    print(r"""
-      #    _____   _   _   _____    ____ __          __ _                ___     ___  
-      #   |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \   |__ \ 
-      #   | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | |     ) |
-      #   | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | |    / / 
-      #   | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  / /_ 
-      #   |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_)|____|
-
-
-    __________-------____                 ____-------__________
-          \------____-------___--__---------__--___-------____------/
-           \//////// / / / / / \   _-------_   / \ \ \ \ \ \\\\\\\\/
-             \////-/-/------/_/_| /___   ___\ |_\_\------\-\-\\\\/
-               --//// / /  /  //|| (O)\ /(O) ||\\  \  \ \ \\\\--
-                    ---__/  // /| \_  /V\  _/ |\ \\  \__---
-                         -//  / /\_ ------- _/\ \  \\-
-                           \_/_/ /\---------/\ \_\_/
-                               ----\   |   /----
-                                    | -|- |
-                                   /   |   \
-                                   ---- \___|
-
-      # by Simon169    
-    """)
-
-
 def update_all_ip(current_ip):
     data = load_config('config.json')
 
@@ -109,17 +85,24 @@ def update_all_ip(current_ip):
 
         if response.json()['success']:
             print(f"\tIP was set successfully!")
+            if notification_service:
+                notification_service.send_success(f"IP for domain {domain} was successfully set to {current_ip}")
         else:
             print(f"\tThere was an error, see below for more details")
             print(f"\tResponse code was: {response.status_code}")
+            if notification_service:
+                notification_service.send_error(f"An error occurred, status code {response.status_code}")
+            print(f"\tResponse json is: {response.json()}")
 
     print('\tDone!')
     print(f"{'':#<40}")
 
 
 if __name__ == '__main__':
-    print_owl()
+
     print(f"{'':#<40}")
     ip = get_current_public_ip()
 
     update_all_ip(ip)
+
+    print(f"\tDone updating, sleep until next CRON schedule...")
