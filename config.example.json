@@ -1,5 +1,6 @@
 {
-
+  "NOTIFY_SERVER": "https://<YOUR_NTFY_SERVER>/<TOPIC>",
+  "ENABLE_NOTIFICATIONS": false,
   "ZONE_ID": "your_zone_id",
   "USER_EMAIL": "name.lastname@mail.com",
   "API_KEY": "your_CF_API_key",
