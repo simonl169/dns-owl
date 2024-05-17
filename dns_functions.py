@@ -23,15 +23,15 @@ def resolve_current_server_ip(url, nameservers='8.8.8.8') -> [str, str]:
     resolver = pydig.Resolver(nameservers=nameservers)
     local_ip = pydig.query(url, 'A')
     public_ip = resolver.query(url, 'A')
-    print(f'\tLocal IP address for {url} is: {local_ip[0]}')
-    print(f'\tPublic IP address for {url} is: {public_ip[0]}')
+    # print(f'\tLocal IP address for {url} is: {local_ip[0]}')
+    # print(f'\tPublic IP address for {url} is: {public_ip[0]}')
     return local_ip[0], public_ip[0]
 
 
 def compare_ip(ip1, ip2) -> bool:
-    print('\tComparing addresses:')
-    print(f'\tIP address 1: {ip1}')
-    print(f'\tIP address 2: {ip2}')
+    # print('\tComparing addresses:')
+    # print(f'\tIP address 1: {ip1}')
+    # print(f'\tIP address 2: {ip2}')
     if ip1 == ip2:
         return True
     else:
