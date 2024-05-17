@@ -80,19 +80,27 @@ def update_all_ip(current_ip):
 
     for domain in data['domains']:
         print(f"{'':#<40}")
-        print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
-        response = set_ip(cf, domain, current_ip)
-
-        if response.json()['success']:
-            print(f"\tIP was set successfully!")
+        print(f"\tPerform Check if Update is necessary...")
+        domain_ip = resolve_current_server_ip(domain['RECORD_NAME'])[1]
+        check = compare_ip(current_ip, domain_ip)
+        if check:
+            print(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
             if notification_service:
-                notification_service.send_success(f"IP for domain {domain} was successfully set to {current_ip}")
+                notification_service.send_success(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
         else:
-            print(f"\tThere was an error, see below for more details")
-            print(f"\tResponse code was: {response.status_code}")
-            if notification_service:
-                notification_service.send_error(f"An error occurred, status code {response.status_code}")
-            print(f"\tResponse json is: {response.json()}")
+            print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
+            response = set_ip(cf, domain, current_ip)
+
+            if response.json()['success']:
+                print(f"\tIP was set successfully!")
+                if notification_service:
+                    notification_service.send_success(f"IP for domain {domain} was successfully set to {current_ip}")
+            else:
+                print(f"\tThere was an error, see below for more details")
+                print(f"\tResponse code was: {response.status_code}")
+                if notification_service:
+                    notification_service.send_error(f"An error occurred, status code {response.status_code}")
+                print(f"\tResponse json is: {response.json()}")
 
     print('\tDone!')
     print(f"{'':#<40}")
