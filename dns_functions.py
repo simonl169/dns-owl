@@ -2,7 +2,6 @@ import requests
 import pydig
 import json
 from notifications import Notifier
-from owl import print_owl
 from config import load_config
 
 
