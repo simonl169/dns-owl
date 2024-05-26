@@ -1,0 +1,33 @@
+changelog:
+  categories:
+    - title: ⚠️ Breaking Changes
+      labels:
+        - breaking-change
+
+    - title: 🖥️ Web
+      labels:
+        - web
+
+    - title: 🐍 Python
+      labels:
+        - python
+
+    - title: ⚡ API
+      labels:
+        - api
+
+    - title: 📓 Documentation
+      labels:
+        - documentation
+
+    - title: 🔨 Maintenance
+      labels:
+        - deployment
+        - dependencies
+        - renovate
+        - maintenance
+        - tech-debt
+
+    - title: Other changes
+      labels:
+        - "*"
