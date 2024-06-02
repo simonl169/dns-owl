@@ -93,12 +93,12 @@ def update_all_ip(current_ip):
             if response.json()['success']:
                 print(f"\tIP was set successfully!")
                 if notification_service:
-                    notification_service.send_success(f"IP for domain {domain} was successfully set to {current_ip}")
+                    notification_service.send_success(f"IP for domain {domain['RECORD_NAME']} was successfully set to {current_ip}. Old IP was {domain_ip}")
             else:
                 print(f"\tThere was an error, see below for more details")
                 print(f"\tResponse code was: {response.status_code}")
                 if notification_service:
-                    notification_service.send_error(f"An error occurred, status code {response.status_code}")
+                    notification_service.send_error(f"An error occurred while setting IP for domain {domain['RECORD_NAME']}, status code {response.status_code}")
                 print(f"\tResponse json is: {response.json()}")
 
     print('\tDone!')
