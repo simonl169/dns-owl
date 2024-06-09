@@ -1,2 +1,8 @@
-requests~=2.32.2
-pydig~=0.4.0
+certifi==2024.6.2
+charset-normalizer==3.3.2
+idna==3.7
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+pydig==0.4.0
+requests==2.32.3
+urllib3==2.2.1

@@ -1,0 +1,39 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Am I HTML already?</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="table">
+     <div class="row header">
+      <div class="cell">
+       Domain
+      </div>
+      <div class="cell">
+        Age
+      </div>
+    </div>
+    {% for domain in domain_list %}
+    <div class="row">
+      <div class="cell" data-title="Domain">
+        {{ domain['RECORD_NAME'] }}
+      </div>
+      <div class="cell" data-title="Age">
+        1337
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+
+</html>
+
