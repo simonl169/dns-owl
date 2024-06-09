@@ -8,4 +8,6 @@ if __name__ == "__main__":
 
     dns.update_all_ip(ip)
 
+    print(f"\tAdd some part to update the index.html")
+
     print(f"\tDone updating, sleep until next CRON schedule...")

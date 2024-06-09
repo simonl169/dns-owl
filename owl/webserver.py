@@ -4,8 +4,11 @@ import socketserver
 from jinja2 import Template
 
 
-def write_to_template():
+def write_to_template(data):
     data = load_config('../config.json')
+
+    for domain in data['domains']:
+        domain['IP'] = 14
 
     with open('template.html.jinja') as f:
         tmpl = Template(f.read())

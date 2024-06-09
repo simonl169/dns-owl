@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Am I HTML already?</title>
+    <title>DNS OWL Status Server</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
        Domain
       </div>
       <div class="cell">
-        Age
+        Current IP Address
       </div>
     </div>
     {% for domain in domain_list %}
@@ -26,7 +26,7 @@
         {{ domain['RECORD_NAME'] }}
       </div>
       <div class="cell" data-title="Age">
-        1337
+        {{ domain['IP'] }}
       </div>
     </div>
     {% endfor %}
