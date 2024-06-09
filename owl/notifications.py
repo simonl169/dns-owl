@@ -4,7 +4,7 @@ from config import load_config
 
 class Notifier:
     def __init__(self):
-        self.data = load_config('config.json')
+        self.data = load_config('../config.json')
         self.ntfy_server = self.data['NOTIFY_SERVER']
 
     def send_success(self, message: str = "Generic success message"):

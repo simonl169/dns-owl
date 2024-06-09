@@ -1,5 +1,4 @@
-import dns_functions as dns
-import owl as owl
+from owl import dns_functions as dns
 
 if __name__ == "__main__":
 
