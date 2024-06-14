@@ -1,20 +1,17 @@
-from config import load_config
 import http.server
 import socketserver
 from jinja2 import Template
+from datetime import datetime
 
 
 def write_to_template(data):
-    data = load_config('../config.json')
-
-    for domain in data['domains']:
-        domain['IP'] = 14
 
     with open('template.html.jinja') as f:
         tmpl = Template(f.read())
 
-    output_from_parsed_template = tmpl.render(domain_list=data['domains'])
-    with open("index.html", "w") as fh:
+    current_dateTime = datetime.now()
+    output_from_parsed_template = tmpl.render(domain_list=data, updated_on=current_dateTime)
+    with open("../index.html", "w") as fh:
         fh.write(output_from_parsed_template)
 
 
@@ -28,5 +25,5 @@ def run(server_port=8000):
 
 
 if __name__ == "__main__":
-    write_to_template()
+    # write_to_template()
     run()

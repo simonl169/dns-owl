@@ -1,4 +1,4 @@
-from owl.webserver import run, write_to_template
+from owl.webserver import run
 from owl.config import load_config
 
 if __name__ == "__main__":

@@ -3,3 +3,4 @@ docker-compose.yml
 venv
 __pycache__
 .idea
+index.html

@@ -3,6 +3,7 @@ import pydig
 import json
 from notifications import Notifier
 from config import load_config
+from webserver import write_to_template
 
 
 if load_config('../config.json')['ENABLE_NOTIFICATIONS']:
@@ -82,10 +83,13 @@ def update_all_ip(current_ip):
         print(f"\tPerform Check if Update is necessary...")
         domain_ip = resolve_current_server_ip(domain['RECORD_NAME'])[1]
         check = compare_ip(current_ip, domain_ip)
+        domain['OLD_IP'] = domain_ip
         if check:
             print(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
             if notification_service:
                 notification_service.send_success(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
+            domain['NEW_IP'] = domain_ip
+            domain['RESULT'] = f"No change"
         else:
             print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
             response = set_ip(cf, domain, current_ip)
@@ -94,13 +98,25 @@ def update_all_ip(current_ip):
                 print(f"\tIP was set successfully!")
                 if notification_service:
                     notification_service.send_success(f"IP for domain {domain['RECORD_NAME']} was successfully set to {current_ip}. Old IP was {domain_ip}")
+                domain['NEW_IP'] = current_ip
+                domain['RESULT'] = f"Update successfull"
             else:
                 print(f"\tThere was an error, see below for more details")
                 print(f"\tResponse code was: {response.status_code}")
                 if notification_service:
                     notification_service.send_error(f"An error occurred while setting IP for domain {domain['RECORD_NAME']}, status code {response.status_code}")
                 print(f"\tResponse json is: {response.json()}")
+                domain['NEW_IP'] = f"Not set"
+                domain['RESULT'] = f"Error"
 
+    print('\tDone!')
+    print(f"{'':#<40}")
+
+    # Updating index.html
+
+    write_to_template(data['domains'])
+
+    print('\tUpdating index.html...')
     print('\tDone!')
     print(f"{'':#<40}")
 
