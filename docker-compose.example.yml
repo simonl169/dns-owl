@@ -1,10 +1,10 @@
 version: '3.8'
 services:
     dns-owl:
-        image: ghcr.io/simonl169/dns-owl:v0.2
+        image: ghcr.io/simonl169/dns-owl:latest
         environment:
             - TZ=Europe/Berlin
-            - CRONVARS2=*/1 * * * *
+            - CRONVARS2=*/10 * * * *
         volumes:
             - ./config.json:/app/config.json
             
