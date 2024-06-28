@@ -12,10 +12,17 @@ else:
     notification_service = None
 
 
-def get_current_public_ip() -> str:
-    ip_address = requests.get('https://ident.me')
-    print(f'\tMy public IP address is: {ip_address.text}')
-    return ip_address.text
+def get_current_public_ip(provider: str = 'CLOUDFLARE') -> str:
+    if provider == 'CLOUDFLARE':
+        print(f'\tChecking public IP via https://cloudflare.com/cdn-cgi/trace')
+        ip_address = requests.get('https://cloudflare.com/cdn-cgi/trace')
+        ip_address_text = ip_address.text.split('\n')[2].replace('ip=', '')
+    else:
+        print(f'\tChecking public IP via https://ident.me')
+        ip_address = requests.get('https://ident.me')
+        ip_address_text = ip_address.text
+    print(f'\tMy public IP address is: {ip_address_text}')
+    return ip_address_text
 
 
 def resolve_current_server_ip(url, nameservers='8.8.8.8') -> [str, str]:
