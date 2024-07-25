@@ -20,7 +20,9 @@ def run(server_port=8000):
     Handler = http.server.SimpleHTTPRequestHandler
 
     with socketserver.TCPServer(("", port), Handler) as httpd:
-        print("serving at port", port)
+        print(f"{'':#<40}")
+        print(f"\tServing at port", port)
+        print(f"{'':#<40}")
         httpd.serve_forever()
 
 
