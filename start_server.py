@@ -5,6 +5,7 @@ if __name__ == "__main__":
     data = load_config('config.json')
     if data['ENABLE_WEBSERVER']:
         print("\t Webserver starting webserver")
-        run()
+        port = data['WEBSERVER_PORT']
+        run(port)
     else:
         print("\t Webserver not enabled")
