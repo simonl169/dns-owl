@@ -6,7 +6,7 @@ from .config import load_config
 from .webserver import write_to_template
 
 
-if load_config('../config.json')['ENABLE_NOTIFICATIONS']:
+if load_config('./config.json')['ENABLE_NOTIFICATIONS']:
     notification_service = Notifier()
 else:
     notification_service = None
@@ -81,7 +81,7 @@ def set_ip(cloudflare, domain, current_ip: str):
 
 
 def update_all_ip(current_ip):
-    data = load_config('../config.json')
+    data = load_config('./config.json')
 
     cf = data
 

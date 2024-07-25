@@ -6,12 +6,12 @@ from datetime import datetime
 
 def write_to_template(data):
 
-    with open('template.html.jinja') as f:
+    with open('owl/template.html.jinja') as f:
         tmpl = Template(f.read())
 
     current_dateTime = datetime.now()
     output_from_parsed_template = tmpl.render(domain_list=data, updated_on=current_dateTime)
-    with open("../index.html", "w") as fh:
+    with open("./index.html", "w") as fh:
         fh.write(output_from_parsed_template)
 
 
