@@ -1,9 +1,9 @@
 import requests
 import pydig
 import json
-from notifications import Notifier
-from config import load_config
-from webserver import write_to_template
+from .notifications import Notifier
+from .config import load_config
+from .webserver import write_to_template
 
 
 if load_config('../config.json')['ENABLE_NOTIFICATIONS']:
