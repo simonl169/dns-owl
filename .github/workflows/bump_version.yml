@@ -43,7 +43,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Bump version
-        run: python test.py --server="${{ inputs.serverBump }}"
+        run: python bump_version.py --server="${{ inputs.serverBump }}"
 
       - name: Commit and tag
         id: push-tag
