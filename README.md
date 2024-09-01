@@ -7,6 +7,31 @@ You can deploy this container on your server and update your public IP to the Cl
 In the config.json you can enter the domains you want to update by a comma-separated list.
 New for Cloudflare: you have to add your Zone ID, Record IDs and API Key, as well as the Mail to access the Cloudflare API and Update your records.
 
+~~~
+{
+  "PUBLIC_IP_CHECK": "CLOUDFLARE",
+  "ENABLE_WEBSERVER": true,
+  "WEBSERVER_PORT": 8000,
+  "NOTIFY_SERVER": "https://<YOUR_NTFY_SERVER>/<TOPIC>",
+  "ENABLE_NOTIFICATIONS": false,
+  "ZONE_ID": "your_zone_id",
+  "USER_EMAIL": "name.lastname@mail.com",
+  "API_KEY": "your_CF_API_key",
+  "domains": [
+     {
+       "RECORD_ID": "record_key_1",
+       "RECORD_NAME": "sub1.domain.com"
+     },
+     {
+       "RECORD_ID": "record_key_2",
+       "RECORD_NAME": "sub2.domain.com"
+     }
+  ]
+
+}
+
+~~~
+
 # Record ID and Zone ID, API Key
 You can get your Zone ID and API Key form your Cloudflare Profile. If you are unsure, refer to the Cloudflare docs.
 With Zone ID, Key and Mail, you can run
