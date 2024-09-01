@@ -1,14 +1,18 @@
 from datetime import datetime
+from owl.notifications import Notifier
+from owl.config import load_config
 
 
 def print_owl():
     print(r"""
-    #    _____   _   _   _____    ____ __          __ _                ___     ____  
-    #   |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \   |___ \ 
-    #   | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | |    __) |
-    #   | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | |   |__ < 
-    #   | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  ___) |
-    #   |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_)|____/ 
+    
+    #      _____   _   _   _____    ____ __          __ _                ___   _  _   
+    #     |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \ | || |  
+    #     | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | || || |_ 
+    #     | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | ||__   _|
+    #     | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  | |  
+    #     |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_) |_|  
+                                                                       
                                                                                   
 
 
@@ -38,6 +42,13 @@ def starting_message():
     \t Time/Date: {current_time}
     """)
     print_owl()
+    send_start_notification()
+
+
+def send_start_notification():
+    if load_config('./config.json')['ENABLE_NOTIFICATIONS']:
+        notification_service = Notifier()
+        notification_service.send_success(f"\tStarting DNS-Owl service!")
 
 
 if __name__ == "__main__":
@@ -45,4 +56,5 @@ if __name__ == "__main__":
     starting_message()
 
 
-# ASCII Art vreated with https://patorjk.com/software/taag
+# ASCII Art created with https://patorjk.com/software/taag
+# Settings: font big, width fitted

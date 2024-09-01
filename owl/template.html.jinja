@@ -1,0 +1,53 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DNS OWL Status Server</title>
+    <link rel="stylesheet" href="./owl/style.css">
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="table">
+     <div class="row header green">
+      <div class="cell">
+       Domain
+      </div>
+      <div class="cell">
+        Old IP Address
+      </div>
+      <div class="cell">
+        New IP Address
+      </div>
+      <div class="cell">
+        Result
+      </div>
+    </div>
+    {% for domain in domain_list %}
+    <div class="row">
+      <div class="cell" data-title="Domain">
+        {{ domain['RECORD_NAME'] }}
+      </div>
+      <div class="cell" data-title="Old IP">
+        {{ domain['OLD_IP'] }}
+      </div>
+      <div class="cell" data-title="New IP">
+        {{ domain['NEW_IP'] }}
+      </div>
+      <div class="cell" data-title="Result">
+        {{ domain['RESULT'] }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<h1>
+Updated on : {{ updated_on }}
+</h1>
+</body>
+
+</html>
+
