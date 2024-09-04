@@ -49,8 +49,11 @@ def bump_version(current_major: str, current_minor: str, current_patch: str, bum
     next_patch = current_patch
     if bump == "major":
         next_major = str(int(next_major) + 1)
+        next_minor = 0
+        next_patch = 0
     elif bump == "minor":
         next_minor = str(int(next_minor) + 1)
+        next_patch = 0
     elif bump == "patch":
         next_patch = str(int(next_patch) + 1)
     elif bump == "False":
