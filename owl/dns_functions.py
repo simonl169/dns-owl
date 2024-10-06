@@ -4,9 +4,10 @@ import json
 from .notifications import Notifier
 from .config import load_config
 from .webserver import write_to_template
+from datetime import datetime
 
 
-if load_config('./config.json')['ENABLE_NOTIFICATIONS']:
+if load_config('./config.json')['NOTIFICATIONS']['ENABLE_NOTIFICATIONS']:
     notification_service = Notifier()
 else:
     notification_service = None
@@ -92,11 +93,17 @@ def update_all_ip(current_ip):
         check = compare_ip(current_ip, domain_ip)
         domain['OLD_IP'] = domain_ip
         if check:
-            print(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
             if notification_service:
-                notification_service.send_success(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
+                if data['NOTIFICATIONS']['ENABLE_NOTIFICATION_NO_CHANGE']:
+                    print(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
+                    notification_service.send_success(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary!")
+                else:
+                    print(f"\tIP for domain: {domain['RECORD_NAME']} is {domain_ip} which is the current public IP {current_ip}. No Update necessary! No Notification send due to configuration!")
             domain['NEW_IP'] = domain_ip
             domain['RESULT'] = f"No change"
+            ### Placeholder
+            ### Needs some work to load time from last successful update
+            domain['LAST_UPDATE'] = datetime.now()
         else:
             print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
             response = set_ip(cf, domain, current_ip)
@@ -107,6 +114,7 @@ def update_all_ip(current_ip):
                     notification_service.send_success(f"IP for domain {domain['RECORD_NAME']} was successfully set to {current_ip}. Old IP was {domain_ip}")
                 domain['NEW_IP'] = current_ip
                 domain['RESULT'] = f"Update successfull"
+                domain['LAST_UPDATE'] = datetime.now()
             else:
                 print(f"\tThere was an error, see below for more details")
                 print(f"\tResponse code was: {response.status_code}")
@@ -115,12 +123,15 @@ def update_all_ip(current_ip):
                 print(f"\tResponse json is: {response.json()}")
                 domain['NEW_IP'] = f"Not set"
                 domain['RESULT'] = f"Error"
+                ### Placeholder
+                ### Needs some work to load time from last successful update
+                domain['LAST_UPDATE'] = datetime.now()
 
     print('\tDone!')
     print(f"{'':#<40}")
 
     # Updating index.html
-
+    date_of_last_update = datetime.now()
     write_to_template(data['domains'])
 
     print('\tUpdating index.html...')
