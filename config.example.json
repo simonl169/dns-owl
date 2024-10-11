@@ -1,9 +1,13 @@
 {
+  "TIMEZONE": "Europe/Berlin",
   "PUBLIC_IP_CHECK": "CLOUDFLARE",
   "ENABLE_WEBSERVER": true,
   "WEBSERVER_PORT": 8000,
   "NOTIFY_SERVER": "https://<YOUR_NTFY_SERVER>/<TOPIC>",
-  "ENABLE_NOTIFICATIONS": false,
+  "NOTIFICATIONS": {
+      "ENABLE_NOTIFICATIONS": true,
+      "ENABLE_NOTIFICATION_NO_CHANGE": false
+  },
   "ZONE_ID": "your_zone_id",
   "USER_EMAIL": "name.lastname@mail.com",
   "API_KEY": "your_CF_API_key",
