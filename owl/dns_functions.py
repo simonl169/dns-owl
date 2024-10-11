@@ -103,7 +103,8 @@ def update_all_ip(current_ip):
             domain['RESULT'] = f"No change"
             ### Placeholder
             ### Needs some work to load time from last successful update
-            domain['LAST_UPDATE'] = datetime.now()
+            domain_info = get_current_dns_entry_from_cf(cf, domain)
+            domain['LAST_UPDATE'] = domain_info['result']['modified_on']
         else:
             print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
             response = set_ip(cf, domain, current_ip)
@@ -114,7 +115,8 @@ def update_all_ip(current_ip):
                     notification_service.send_success(f"IP for domain {domain['RECORD_NAME']} was successfully set to {current_ip}. Old IP was {domain_ip}")
                 domain['NEW_IP'] = current_ip
                 domain['RESULT'] = f"Update successfull"
-                domain['LAST_UPDATE'] = datetime.now()
+                domain_info = get_current_dns_entry_from_cf(cf, domain)
+                domain['LAST_UPDATE'] = domain_info['result']['modified_on']
             else:
                 print(f"\tThere was an error, see below for more details")
                 print(f"\tResponse code was: {response.status_code}")
@@ -125,18 +127,46 @@ def update_all_ip(current_ip):
                 domain['RESULT'] = f"Error"
                 ### Placeholder
                 ### Needs some work to load time from last successful update
-                domain['LAST_UPDATE'] = datetime.now()
+                domain_info = get_current_dns_entry_from_cf(cf, domain)
+                domain['LAST_UPDATE'] = domain_info['result']['modified_on']
 
     print('\tDone!')
     print(f"{'':#<40}")
 
     # Updating index.html
-    date_of_last_update = datetime.now()
     write_to_template(data['domains'])
 
     print('\tUpdating index.html...')
     print('\tDone!')
     print(f"{'':#<40}")
+
+def get_current_dns_entry_from_cf(cloudflare, domain):
+    zone_id = cloudflare['ZONE_ID']
+    api_key = cloudflare['API_KEY']
+    user_email = cloudflare['USER_EMAIL']
+
+    record_id = domain['RECORD_ID']
+    record_name = domain['RECORD_NAME']
+
+    print(f"\tCloudflare Zone ID is: {zone_id}")
+    print(f"\tCloudflare API Key is: {api_key}")
+    print(f"\tRecord ID is: {record_id}")
+    print(f"\tRecord Name is: {record_name}")
+
+    url = (
+            "https://api.cloudflare.com/client/v4/zones/%(zone_id)s/dns_records/%(record_id)s"
+            % {"zone_id": zone_id, "record_id": record_id}
+    )
+
+    headers = {
+        "X-Auth-Email": user_email,
+        "X-Auth-Key": api_key,
+        "Content-Type": "application/json",
+    }
+
+    response = requests.get(url, headers=headers)
+    # print(response.status_code)
+    return response.json()
 
 
 if __name__ == '__main__':
@@ -147,3 +177,4 @@ if __name__ == '__main__':
     update_all_ip(ip)
 
     print(f"\tDone updating, sleep until next CRON schedule...")
+
