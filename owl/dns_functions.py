@@ -4,8 +4,10 @@ import json
 from .notifications import Notifier
 from .config import load_config
 from .webserver import write_to_template
-from datetime import datetime
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
+TIMEZONE = ZoneInfo(load_config('./config.json')['TIMEZONE'])
 
 if load_config('./config.json')['NOTIFICATIONS']['ENABLE_NOTIFICATIONS']:
     notification_service = Notifier()
@@ -104,7 +106,8 @@ def update_all_ip(current_ip):
             ### Placeholder
             ### Needs some work to load time from last successful update
             domain_info = get_current_dns_entry_from_cf(cf, domain)
-            domain['LAST_UPDATE'] = domain_info['result']['modified_on']
+            last_update = datetime.strptime(domain_info['result']['modified_on'], "%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=timezone.utc)
+            domain['LAST_UPDATE'] = last_update.astimezone(TIMEZONE).strftime("%d.%m.%Y at %H:%M:%S")
         else:
             print(f"\tUpdating DynDNS IP for domain: {domain['RECORD_NAME']}...")
             response = set_ip(cf, domain, current_ip)
@@ -116,7 +119,8 @@ def update_all_ip(current_ip):
                 domain['NEW_IP'] = current_ip
                 domain['RESULT'] = f"Update successfull"
                 domain_info = get_current_dns_entry_from_cf(cf, domain)
-                domain['LAST_UPDATE'] = domain_info['result']['modified_on']
+                last_update = datetime.strptime(domain_info['result']['modified_on'], "%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=timezone.utc)
+                domain['LAST_UPDATE'] = last_update.astimezone(TIMEZONE).strftime("%d.%m.%Y at %H:%M:%S")
             else:
                 print(f"\tThere was an error, see below for more details")
                 print(f"\tResponse code was: {response.status_code}")
@@ -128,7 +132,8 @@ def update_all_ip(current_ip):
                 ### Placeholder
                 ### Needs some work to load time from last successful update
                 domain_info = get_current_dns_entry_from_cf(cf, domain)
-                domain['LAST_UPDATE'] = domain_info['result']['modified_on']
+                last_update = datetime.strptime(domain_info['result']['modified_on'], "%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=timezone.utc)
+                domain['LAST_UPDATE'] = last_update.astimezone(TIMEZONE).strftime("%d.%m.%Y at %H:%M:%S")
 
     print('\tDone!')
     print(f"{'':#<40}")
