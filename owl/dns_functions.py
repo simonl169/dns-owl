@@ -1,9 +1,9 @@
 import requests
 import pydig
 import json
-from .notifications import Notifier
-from .config import load_config
-from .webserver import write_to_template
+from owl.notifications import Notifier
+from owl.config import load_config
+from owl.webserver import write_to_template
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
