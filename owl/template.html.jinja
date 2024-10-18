@@ -25,6 +25,9 @@
       <div class="cell">
         Result
       </div>
+      <div class="cell">
+        Last update on
+      </div>
     </div>
     {% for domain in domain_list %}
     <div class="row">
@@ -39,6 +42,9 @@
       </div>
       <div class="cell" data-title="Result">
         {{ domain['RESULT'] }}
+      </div>
+      <div class="cell" data-title="Updated on">
+        {{ domain['LAST_UPDATE'] }}
       </div>
     </div>
     {% endfor %}

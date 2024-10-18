@@ -6,13 +6,13 @@ from owl.config import load_config
 def print_owl():
     print(r"""
     
-    #      _____   _   _   _____    ____ __          __ _                ___   _  _   
-    #     |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \ | || |  
-    #     | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | || || |_ 
-    #     | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | ||__   _|
-    #     | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  | |  
-    #     |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_) |_|  
-                                                                       
+#      _____   _   _   _____    ____ __          __ _                ___     _____ 
+#     |  __ \ | \ | | / ____|  / __ \\ \        / /| |              / _ \   | ____|
+#     | |  | ||  \| || (___   | |  | |\ \  /\  / / | |      __   __| | | |  | |__  
+#     | |  | || . ` | \___ \  | |  | | \ \/  \/ /  | |      \ \ / /| | | |  |___ \ 
+#     | |__| || |\  | ____) | | |__| |  \  /\  /   | |____   \ V / | |_| |_  ___) |
+#     |_____/ |_| \_||_____/   \____/    \/  \/    |______|   \_/   \___/(_)|____/ 
+                                                                                                                                                     
                                                                                   
 
 
@@ -46,7 +46,7 @@ def starting_message():
 
 
 def send_start_notification():
-    if load_config('./config.json')['ENABLE_NOTIFICATIONS']:
+    if load_config('./config.json')['NOTIFICATIONS']['ENABLE_NOTIFICATIONS']:
         notification_service = Notifier()
         notification_service.send_success(f"\tStarting DNS-Owl service!")
 
