@@ -1,5 +1,5 @@
 import requests
-from .config import load_config
+from owl.config import load_config
 
 
 class Notifier:

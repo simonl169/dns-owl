@@ -46,7 +46,7 @@ def starting_message():
 
 
 def send_start_notification():
-    if load_config('./config.json')['ENABLE_NOTIFICATIONS']:
+    if load_config('./config.json')['NOTIFICATIONS']['ENABLE_NOTIFICATIONS']:
         notification_service = Notifier()
         notification_service.send_success(f"\tStarting DNS-Owl service!")
 
